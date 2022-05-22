@@ -33,3 +33,4 @@
  7) inside dbConnection.js, create the database connection
  9) create a db variable to receive the database connection
  10) export the variable db
+ 11) run in terminal: npm run dev
