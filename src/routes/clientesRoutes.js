@@ -9,5 +9,6 @@ router
     .get("/clientes", ClienteController.listarClientes)
     .post("/clientes", ClienteController.cadastrarCliente)
     .post("/clientes/autenticar", ClienteController.autenticarCliente)
+    .delete("/clientes/:id", ClienteController.deletaCliente)
 
 export default router;
