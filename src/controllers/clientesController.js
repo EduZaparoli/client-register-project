@@ -44,6 +44,17 @@ class ClienteController{
             }
         })
     }
+
+    static atualizarCliente = (req, res) => {
+        const id = req.params.id
+        clientes.findByIdAndUpdate(id, {$set: req.body}, (err) => {
+            if(!err){
+                res.status(200).send({message: 'Usuário atualizado com sucesso'});
+            }else{
+                res.status(500).send({message: `${err.message} - Falha ao atualizar usuário`});
+            }
+        })
+    }
 }
 
 export default ClienteController;
