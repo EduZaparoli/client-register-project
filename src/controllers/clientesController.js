@@ -33,6 +33,17 @@ class ClienteController{
             }
         })
     }
+
+    static deletaCliente = (req, res) => {
+        const id = req.params.id;
+        clientes.findByIdAndDelete(id, (err) => {
+            if(!err){
+                res.status(200).send({message: 'Usuário deletado com sucesso'});
+            }else{
+                res.status(500).send({message: `${err.message} - Não foi possível excluir o usuário`});
+            }
+        })
+    }
 }
 
 export default ClienteController;
