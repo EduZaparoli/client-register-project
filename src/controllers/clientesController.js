@@ -1,36 +1,30 @@
 import clientes from "../models/Cliente.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import authConfig from "../config/auth.json";
 
 class ClienteController{
 
     //metodo para cadastrar um novo cliente
-    static cadastrarCliente = (req, res) => {
-        let cliente = new clientes(req.body);
-        cliente.save((err) => {
-            if(err){
-                res.status(500).send({message: `${err.message} - falha ao cadastrar cliente!`});
-            }else{
-                res.status(201).send(cliente.toJSON());
+    static cadastrarCliente = async (req, res) => {
+        const {email} = req.body;
+        try{
+            if(await clientes.findOne({email})){
+                return res.status(400).send({message: 'Usuário já existe'});
             }
-        })
+            const cliente = await clientes.create(req.body);
+            cliente.senha = undefined;
+            return res.send({cliente})
+
+        }catch(err){
+            return res.status(400).send({message: "Falha ao cadastrar cliente!"});
+        }
     }
 
     //metodo para listar todos os clientes
     static listarClientes = (req, res) => {
         clientes.find((err, clientes) => {
             res.status(200).json(clientes);
-        })
-    }
-
-    //metodo para autenticar um login de cliente
-    static autenticarCliente = (req, res) => {
-        console.log(req.body)
-        clientes.findOne(req.body).then(response => {
-            console.log(response)
-            if(response != null){
-                res.status(200).send({message: 'Logado com sucesso'});
-            }else{
-                res.status(200).send({message: 'E-mail ou senha inválidos'});
-            }
         })
     }
 
@@ -54,6 +48,27 @@ class ClienteController{
                 res.status(500).send({message: `${err.message} - Falha ao atualizar usuário`});
             }
         })
+    }
+
+    //metodo para autenticar um login de cliente
+    static autenticarCliente = async (req, res) => {
+        const {email, senha} = req.body;
+        const cliente = await clientes.findOne({email}).select('+senha');
+
+        if(!cliente){
+            return res.status(400).send({message: "Usuário não encontrado"})
+        }
+        if(!await bcrypt.compare(senha, cliente.senha)){
+            return res.status(400).send({message: 'Senha inválida'});
+        }
+
+        cliente.senha = undefined;
+
+        const token = jwt.sign({id: cliente.id}, authConfig.secret, {
+            expiresIn: 86400,
+        });
+
+        res.send({cliente, token});
     }
 }
 
