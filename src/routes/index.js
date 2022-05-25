@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import clientes from "./clientesRoutes.js";
-import bodyParser from "body-parser";
 
 const __dirname = path.resolve();
 
