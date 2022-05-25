@@ -1,7 +1,8 @@
 import clientes from "../models/Cliente.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import authConfig from "../config/auth.json";
+import * as fs from "fs";
+const authConfig = JSON.parse(fs.readFileSync('./src/config/auth.json'));
 
 class ClienteController{
 
@@ -70,6 +71,7 @@ class ClienteController{
 
         res.send({cliente, token});
     }
+    
 }
 
 export default ClienteController;
