@@ -6,6 +6,12 @@ const authConfig = JSON.parse(fs.readFileSync('./src/config/auth.json'));
 
 class ClienteController{
 
+    static geraToken(params = {}){
+        return jwt.sign(params, authConfig.secret, {
+            expiresIn: 86400,
+        });
+    }
+
     //metodo para cadastrar um novo cliente
     static cadastrarCliente = async (req, res) => {
         const {email} = req.body;
@@ -15,7 +21,10 @@ class ClienteController{
             }
             const cliente = await clientes.create(req.body);
             cliente.senha = undefined;
-            return res.send({cliente})
+            return res.send({
+                cliente,
+                token: this.geraToken({id: cliente.id}),
+            })
 
         }catch(err){
             return res.status(400).send({message: "Falha ao cadastrar cliente!"});
@@ -65,11 +74,10 @@ class ClienteController{
 
         cliente.senha = undefined;
 
-        const token = jwt.sign({id: cliente.id}, authConfig.secret, {
-            expiresIn: 86400,
+        res.send({
+            message: "Logado com sucesso",
+            token : this.geraToken({id: cliente.id}),
         });
-
-        res.send({cliente, token});
     }
     
 }
