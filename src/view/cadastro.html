@@ -155,7 +155,7 @@
                 </div>
 
                 <div class="botao">
-                    <input type="submit" name="acao" value="Cadastrar" onclick="cadastrar()">
+                    <input type="submit" name="acao" value="Cadastrar">
                 </div>
 
                 <div class="footer">
@@ -163,7 +163,7 @@
                         <p>Já tem conta?</p>
                     </div>
                     <div class="ir-para-login">    
-                        <p><a href="index">Ir para Login</a></p>
+                        <p><a href="login">Ir para Login</a></p>
                     </div>
                 </div>
                     
@@ -176,12 +176,18 @@
         let email = document.getElementById('input-email');
         let senha = document.getElementById('input-password');
 
-        async function cadastrar(){
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
             const cliente = {
                 nome: nome.value,
                 email: email.value,
                 senha: senha.value
             }
+
+            cadastro(cliente);
+        })
+
+        async function cadastro(cliente){
 
             await fetch("http://localhost:3000/clientes", {
                 method: 'POST',
