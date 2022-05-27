@@ -5,5 +5,5 @@ const port = process.env.PORT || 3000;
 
 //lincar a porta que vai escutar a req e mandar a res
 app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}/index`);
+    console.log(`Servidor rodando em http://localhost:${port}/login`);
 })
