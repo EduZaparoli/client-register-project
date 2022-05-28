@@ -2,6 +2,7 @@ import clientes from "../models/Cliente.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import * as fs from "fs";
+import { response } from "express";
 const authConfig = JSON.parse(fs.readFileSync('./src/config/auth.json'));
 
 class ClienteController{
@@ -14,18 +15,21 @@ class ClienteController{
 
     //metodo para cadastrar um novo cliente
     static cadastrarCliente = async (req, res) => {
-        const {email} = req.body;
+        const {nome, email, senha} = req.body;
         try{
             if(await clientes.findOne({email})){
                 return res.status(400).send({message: 'Usuário já existe'});
-            }
-            const cliente = await clientes.create(req.body);
-            cliente.senha = undefined;
-            return res.send({
+            }else if(!nome || !email || !senha){
+                return res.status(400).send({message: 'Preencha os campos para cadastrar'});
+            }else{
+                const cliente = await clientes.create(req.body);
+                cliente.senha = undefined;
+                return res.send({
                 cliente,
                 token: this.geraToken({id: cliente.id}),
-            })
-
+                message: 'Cadastrado com sucesso'
+                })
+            }
         }catch(err){
             return res.status(400).send({message: "Falha ao cadastrar cliente!"});
         }
@@ -65,21 +69,19 @@ class ClienteController{
         const {email, senha} = req.body;
         const cliente = await clientes.findOne({email}).select('+senha');
 
-        if(!cliente){
-            return res.status(400).send({message: "Usuário não encontrado"})
-        }
-        if(!await bcrypt.compare(senha, cliente.senha)){
-            return res.status(400).send({message: 'Senha inválida'});
+        if(!cliente || !await bcrypt.compare(senha, cliente.senha)){
+            return res.status(400).send({message: "email ou senha inválidos"})
         }
 
         cliente.senha = undefined;
 
-        res.send({
+        const token = res.send({
             message: "Logado com sucesso",
-            token : this.geraToken({id: cliente.id}),
+            token: this.geraToken({id: cliente.id}),
         });
+        return token
     }
-    
+
 }
 
 export default ClienteController;
