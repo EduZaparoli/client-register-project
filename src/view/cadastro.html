@@ -52,6 +52,7 @@
     .botao{
         display: flex;
         flex-direction: column;
+        margin-top: -20px;
     }
 
     .input-field{
@@ -133,6 +134,11 @@
         text-decoration: underline;
     }
 
+    .login-fail{
+        padding: 10px 0 10px 0;
+        color: red;
+    }
+
 </style>
 <body>
     <div class="container">
@@ -153,6 +159,8 @@
                     <input type="password" name="senha" id="input-password" placeholder="Digite sua senha">
                     <div class="underline"></div>
                 </div>
+
+                <div class="login-fail" id="login-fail"></div>
 
                 <div class="botao">
                     <input type="submit" name="acao" value="Cadastrar">
@@ -184,12 +192,20 @@
                 senha: senha.value
             }
 
-            cadastro(cliente);
+            cadastro(cliente).then(response => {
+                if(response.message == 'Usuário já existe'){
+                    document.getElementById('login-fail').innerHTML = 'Já existe um usuário cadastrado com esse e-mail';
+                }else if(response.message == 'Preencha os campos para cadastrar'){
+                    document.getElementById('login-fail').innerHTML = 'Preencha todos os campos para cadastrar';
+                }else if(response.message == 'Cadastrado com sucesso'){
+                    document.getElementById('login-fail').innerHTML = 'Usuário cadastrado com sucesso';
+                }
+            });
         })
 
         async function cadastro(cliente){
 
-            await fetch("http://localhost:3000/clientes", {
+            const response = await fetch("http://localhost:3000/clientes", {
                 method: 'POST',
                 headers: {
                     'Content-Type': "application/json"
@@ -197,6 +213,7 @@
                 body: JSON.stringify(cliente)
             });
 
+            return response.json();
         }
 
     </script>
