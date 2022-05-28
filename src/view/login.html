@@ -184,12 +184,13 @@
                 senha: senha.value
             }
             autenticaCliente(cliente).then(response => {
-                token = response.token;
+                let date = new Date();
+                date = date.setDate(date.getDate()+30)
                 if(response.message == "email ou senha inválidos"){
                     document.getElementById('login-fail').innerHTML = 'E-mail ou senha inválidos';
                 }else{
-                    location.replace("logado");
-                    return token;
+                    location.replace("clientes");
+                    document.cookie="token="+response.token + ";expires="+date + ";path=http://localhost";
                 }
             })
         })
