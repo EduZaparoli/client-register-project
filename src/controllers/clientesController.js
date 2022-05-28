@@ -2,14 +2,13 @@ import clientes from "../models/Cliente.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import * as fs from "fs";
-import { response } from "express";
 const authConfig = JSON.parse(fs.readFileSync('./src/config/auth.json'));
 
 class ClienteController{
 
     static geraToken(params = {}){
         return jwt.sign(params, authConfig.secret, {
-            expiresIn: 86400,
+            expiresIn: 30,
         });
     }
 
