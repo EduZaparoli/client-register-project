@@ -8,7 +8,7 @@ class ClienteController{
 
     static geraToken(params = {}){
         return jwt.sign(params, authConfig.secret, {
-            expiresIn: 30,
+            expiresIn: "15000",
         });
     }
 
