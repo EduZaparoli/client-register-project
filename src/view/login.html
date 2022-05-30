@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,14 +8,14 @@
     <title>Login</title>
 </head>
 <style>
-    *{
+    * {
         margin: 0;
         padding: 0;
         border: 0;
         box-sizing: border-box;
     }
 
-    body{
+    body {
         background-color: #1054DE;
         min-height: 100vh;
         min-width: 100vw;
@@ -23,7 +24,7 @@
         justify-content: center;
     }
 
-    .container{
+    .container {
         background-color: white;
         max-width: 350vw;
         min-height: 40vh;
@@ -32,13 +33,13 @@
         border-radius: 8px;
     }
 
-    body h2{
+    body h2 {
         font-weight: 600;
         margin-bottom: 2rem;
         position: relative;
     }
 
-    body h2::before{
+    body h2::before {
         content: '';
         position: absolute;
         height: 4px;
@@ -49,21 +50,21 @@
         background-color: #0594F5;
     }
 
-    .botao{
+    .botao {
         display: flex;
         flex-direction: column;
         margin-top: -20px;
     }
 
-    .input-field{
+    .input-field {
         position: relative;
     }
 
-    form .input-field:nth-child(1n){
+    form .input-field:nth-child(1n) {
         margin-bottom: 1rem;
     }
 
-    .input-field .underline::before{
+    .input-field .underline::before {
         content: '';
         position: absolute;
         height: 1px;
@@ -73,7 +74,7 @@
         background-color: rgba(0, 0, 0, 0.2);
     }
 
-    .input-field .underline::after{
+    .input-field .underline::after {
         content: '';
         position: absolute;
         height: 1px;
@@ -86,21 +87,21 @@
         transform-origin: left;
     }
 
-    .input-field input:focus ~ .underline::after{
+    .input-field input:focus~.underline::after {
         transform: scaleX(1);
     }
 
-    .input-field input{
+    .input-field input {
         outline: none;
         font-size: 0.9rem;
         color: rgba(0, 0, 0, 0.705);
     }
 
-    .input-field input::placeholder{
+    .input-field input::placeholder {
         color: rgba(0, 0, 0, 0.5);
     }
 
-    form input[type="submit"]{
+    form input[type="submit"] {
         margin-top: 2rem;
         padding: 0.4rem;
         background-color: #0594F5;
@@ -112,34 +113,34 @@
         transition: all 0.3s ease;
     }
 
-    form input[type="submit"]::hover{
+    form input[type="submit"]::hover {
         letter-spacing: 0.5px;
     }
 
-    .footer{
+    .footer {
         display: flex;
         flex-direction: column;
         margin-top: 1rem;
     }
 
-    .ja-tem-conta{
+    .ja-tem-conta {
         margin: 0 0 10px 0;
     }
 
-    .ir-para-login a{
+    .ir-para-login a {
         text-decoration: none;
     }
 
-    .ir-para-login a:hover{
+    .ir-para-login a:hover {
         text-decoration: underline;
     }
-    
-    .login-fail{
+
+    .login-fail {
         padding: 10px 0 10px 0;
         color: red;
     }
-
 </style>
+
 <body>
     <div class="container">
         <h2>Login</h2>
@@ -185,27 +186,28 @@
             }
             autenticaCliente(cliente).then(response => {
                 let date = new Date();
-                date = date.setDate(date.getDate()+30)
-                if(response.message == "email ou senha inválidos"){
+                date = date.setDate(date.getDate() + 1)
+                if (response.message == "email ou senha inválidos") {
                     document.getElementById('login-fail').innerHTML = 'E-mail ou senha inválidos';
-                }else{
-                    location.replace("clientes");
-                    document.cookie="token="+response.token + ";expires="+date + ";path=http://localhost";
+                }else {
+                    location.replace("logado");
+                    document.cookie = "token=" + response.token + ";expires=" + date + ";path=http://localhost";
                 }
             })
         })
 
-        async function autenticaCliente(cliente){
+        async function autenticaCliente(cliente) {
             const response = await fetch("http://localhost:3000/clientes/autenticar", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': "application/json"
+                    'Content-Type': "application/json",
                 },
                 body: JSON.stringify(cliente)
             });
             return response.json();
         }
-        
+
     </script>
 </body>
+
 </html>
