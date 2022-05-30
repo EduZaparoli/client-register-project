@@ -7,7 +7,7 @@ const router = express.Router();
 
 //oque vai acontecer na rota
 router
-    .get("/clientes", autenticaToken, ClienteController.listarClientes)
+    .get("/autentica-token", autenticaToken, ClienteController.listarClientes)
     .post("/clientes", ClienteController.cadastrarCliente)
     .post("/clientes/autenticar", ClienteController.autenticarCliente)
     .put("/clientes/:id", ClienteController.atualizarCliente)
