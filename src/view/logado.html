@@ -8,5 +8,41 @@
 </head>
 <body>
     <h1>Este é o super site</h1>
+
+    <script>
+        async function autenticaToken(cliente) {
+            const response = await fetch("http://localhost:3000/autentica-token", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': "application/json",
+                    'authorization': "Bearer " + getCookie("token")
+                },
+                body: JSON.stringify(cliente)
+            });
+            return response.json();
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        autenticaToken().then(response => {
+            if(response.message == "Token inválido"){
+                location.replace("login");
+            }
+        });
+    </script>
 </body>
 </html>
